@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 
 // --- Importaciones de Firebase ---
-import { FIREBASE_AUTH } from "../FirebaseConfig"; // Importa la instancia de autenticación de Firebase (auth).
-import { signInWithEmailAndPassword } from "firebase/auth"; // Importa la función específica de Firebase para iniciar sesión con email y contraseña.
+import { FIREBASE_AUTH } from "../FirebaseConfig";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 // --- Componentes de React Native (UI) ---
 import {
   Text,
   View,
-  ScrollView,
   StyleSheet,
   ActivityIndicator,
+  ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
@@ -20,17 +20,20 @@ import { COLORS, FONT_SIZES } from "../styles.js";
 import Logo from "../components/Logo";
 import CustomInput from "../components/CustomInput.jsx";
 
-const Login = ({ navigation }) => {
+const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
 
-  // Función para iniciar sesión
-  const signIn = async () => {
+  const signUp = async () => {
     setLoading(true);
     try {
-      const response = await signInWithEmailAndPassword(auth, email, password);
+      const response = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       console.log(response);
     } catch (error) {
       console.log(error);
@@ -50,28 +53,29 @@ const Login = ({ navigation }) => {
           {/* Header */}
           <View style={styles.textContainer}>
             <Logo fontSize={26} />
-            <Text style={styles.title}>¡Bienvenido de nuevo!</Text>
-            <Text style={styles.subtitle}>Nos alegra tenerte de vuelta</Text>
+            <Text style={styles.title}>¡Hola!</Text>
+            <Text style={styles.subtitle}>
+              Iniciemos esta aventura de aprendizaje conociéndote un poco más...
+            </Text>
           </View>
 
           {/* Inputs */}
           <View style={styles.form}>
             <CustomInput
               value={email}
-              onChangeText={setEmail}
               placeholder="Correo electrónico"
               placeholderTextColor={COLORS.lightGray}
-              keyboardType="email-address"
               autoCapitalize="none"
+              keyboardType="email-address"
+              onChangeText={setEmail}
             />
-
             <CustomInput
+              secureTextEntry
               value={password}
-              onChangeText={setPassword}
               placeholder="Contraseña"
               placeholderTextColor={COLORS.lightGray}
-              secureTextEntry
               autoCapitalize="none"
+              onChangeText={setPassword}
             />
           </View>
 
@@ -80,23 +84,23 @@ const Login = ({ navigation }) => {
             <ActivityIndicator size="large" color={COLORS.vibrantViolet} />
           ) : (
             <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.button} onPress={signIn}>
-                <Text style={styles.buttonText}>Iniciar sesión</Text>
+              <TouchableOpacity style={styles.button} onPress={signUp}>
+                <Text style={styles.buttonText}>Registrarse</Text>
               </TouchableOpacity>
             </View>
           )}
           {/* Redireccionamiento a SignUp*/}
-          <View style={styles.signUpContainer}>
-            <Text style={styles.signUpText}>
-              ¿Aún no tienes cuenta?{" "}
+          <View style={styles.loginContainer}>
+            <Text style={styles.loginText}>
+              ¿Ya tienes una cuenta?{" "}
               <Text
-                onPress={() => navigation.navigate("SignUp")}
+                onPress={() => navigation.navigate("Login")}
                 style={{
                   color: COLORS.deepBlack,
                   fontWeight: "700",
                 }}
               >
-                Regístrate
+                Inicia sesión
               </Text>
             </Text>
           </View>
@@ -106,7 +110,7 @@ const Login = ({ navigation }) => {
   );
 };
 
-export default Login;
+export default SignUp;
 
 const styles = StyleSheet.create({
   scrollContainer: {
@@ -147,6 +151,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: COLORS.white,
     borderWidth: 1,
+    borderColor: COLORS.lightGray,
   },
   buttonContainer: {
     alignItems: "center",
@@ -163,11 +168,11 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZES.large,
     fontFamily: "MontserratSemiBold",
   },
-  signUpContainer: {
+  loginContainer: {
     marginTop: "20",
     alignItems: "center",
   },
-  signUpText: {
+  loginText: {
     fontFamily: "NunitoRegular",
     fontSize: FONT_SIZES.medimum,
   },
