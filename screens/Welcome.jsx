@@ -1,10 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { COLORS, FONT_SIZES, SPACING } from "../styles.js";
 import Logo from "../components/Logo";
 
 const Welcome = ({ navigation }) => {
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Logo fontColor={COLORS.primaryBlue} fontSize={26} />
       <View>
         <Text style={styles.subtitle}>
@@ -17,19 +17,19 @@ const Welcome = ({ navigation }) => {
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("SignUp")}
-        >
-          <Text style={styles.buttonText}>Registrarse</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
+          style={styles.buttonPrimary}
           onPress={() => navigation.navigate("Login")}
         >
-          <Text style={styles.buttonText}>Iniciar sesión</Text>
+          <Text style={styles.buttonTextPrimary}>Iniciar sesión</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonSecondary}
+          onPress={() => navigation.navigate("SignUp")}
+        >
+          <Text style={styles.buttonTextSecondary}>Registrarse</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -54,19 +54,21 @@ const styles = StyleSheet.create({
     fontSize: 32,
     textAlign: "center",
     fontFamily: "NunitoSemiBold",
-    marginBottom: 40,
+    marginTop: 20,
+    marginBottom: 30,
   },
   paragraph: {
     color: COLORS.lightGray,
     fontSize: FONT_SIZES.large,
     textAlign: "center",
     fontFamily: "NunitoRegular",
+    marginBottom: 30,
   },
   buttonContainer: {
     alignItems: "center",
     justifyContent: "center",
   },
-  button: {
+  buttonPrimary: {
     backgroundColor: COLORS.primaryBlue,
     paddingVertical: 12,
     paddingHorizontal: 40,
@@ -75,9 +77,25 @@ const styles = StyleSheet.create({
     width: "80%",
     alignItems: "center",
   },
-  buttonText: {
+  buttonSecondary: {
+    backgroundColor: COLORS.darkBlue,
+    paddingVertical: 12,
+    paddingHorizontal: 40,
+    borderWidth: 1,
+    borderColor: COLORS.white,
+    borderRadius: 20,
+    marginVertical: 10,
+    width: "80%",
+    alignItems: "center",
+  },
+  buttonTextPrimary: {
     color: COLORS.white,
     fontSize: FONT_SIZES.large,
     fontFamily: "MontserratSemiBold",
   },
+  buttonTextSecondary: {
+    color: COLORS.primaryBlue,
+    fontSize: FONT_SIZES.large,
+    fontFamily: "MontserratSemiBold",
+  }
 });

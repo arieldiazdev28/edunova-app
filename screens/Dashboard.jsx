@@ -1,6 +1,11 @@
-import { View, Text, Button, StyleSheet } from "react-native";
+import { ScrollView, View, StyleSheet, Button, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { signOut } from "firebase/auth";
+
 import { FIREBASE_AUTH } from "../FirebaseConfig";
+import { COLORS, FONT_SIZES } from "../styles.js";
+import Footer from "../components/Footer.jsx";
+import Header from "../components/Header.jsx";
 
 const Dashboard = () => {
   const handleLogout = async () => {
@@ -11,25 +16,39 @@ const Dashboard = () => {
       console.log("Error al cerrar sesión:", error);
     }
   };
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Bienvenido al Dashboard</Text>
-      <Button title="Cerrar sesión" onPress={handleLogout} />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.header}>
+        <Header />
+        <View style={styles.quoteContainer}>
+          <Text style={styles.quote}>"El aprendizaje es experiencia, todo lo demás es información" - Albert Einstein</Text>
+        </View>
+      </ScrollView>
+      {/* <Button title="Cerrar sesión" onPress={handleLogout} /> */}
+      <Footer />
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: COLORS.darkBlue
   },
   title: {
     fontSize: 20,
     marginBottom: 20,
   },
+  quoteContainer: {
+    padding: 10
+  },
+  quote: {
+    color: COLORS.white,
+    textAlign: "center",
+    fontFamily: "NunitoRegular",
+    fontSize: 18,
+    fontStyle: "italic"
+  }
 });
 
 export default Dashboard;
