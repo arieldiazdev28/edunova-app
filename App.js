@@ -20,7 +20,7 @@ const InsideStack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
 
 /* Función que renderiza la pantalla de bienvenida y configura
-   la navegación a las pantallas de Login y Sign Up
+  la navegación a las pantallas de Login y Sign Up
 */
 function AuthLayout() {
   return (
