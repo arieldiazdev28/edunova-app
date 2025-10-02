@@ -50,7 +50,11 @@ function AuthLayout() {
 function InsideLayout() {
   return (
     <InsideStack.Navigator>
-      <InsideStack.Screen name="Dashboard" component={Dashboard} />
+      <InsideStack.Screen
+        name="Dashboard"
+        component={Dashboard}
+        options={{ headerShown: false }}
+      />
       <InsideStack.Screen
         name="CatalogoMaterias"
         component={CatalogoMaterias}
