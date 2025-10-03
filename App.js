@@ -53,7 +53,7 @@ function InsideLayout() {
       <InsideStack.Screen
         name="Dashboard"
         component={Dashboard}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <InsideStack.Screen
         name="CatalogoMaterias"
