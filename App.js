@@ -50,10 +50,15 @@ function AuthLayout() {
 function InsideLayout() {
   return (
     <InsideStack.Navigator>
-      <InsideStack.Screen name="Dashboard" component={Dashboard} />
+      <InsideStack.Screen
+        name="Dashboard"
+        component={Dashboard}
+        options={{headerShown: false}}
+      />
       <InsideStack.Screen
         name="CatalogoMaterias"
         component={CatalogoMaterias}
+        options={{headerShown: false}}
       />
     </InsideStack.Navigator>
   );
@@ -95,17 +100,21 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         {user ? (
+
           <Stack.Screen
             name="InsideLayout"
             component={InsideLayout}
             options={{ headerShown: false }}
           />
+
         ) : (
-          <Stack.Screen
-            name="AuthLayout"
-            component={AuthLayout}
-            options={{ headerShown: false }}
-          />
+          <>
+            <Stack.Screen
+              name="AuthLayout"
+              component={AuthLayout}
+              options={{ headerShown: false }}
+            />
+          </>
         )}
       </Stack.Navigator>
     </NavigationContainer>

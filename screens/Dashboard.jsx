@@ -23,7 +23,7 @@ const Dashboard = () => {
       <ScrollView contentContainerStyle={styles.header}>
         <Header />
         <View style={styles.quoteContainer}>
-          <Text style={styles.quote}>"El aprendizaje es experiencia, todo lo demás es información" - Albert Einstein</Text>
+          <Text style={styles.quote}>"El aprendizaje es experiencia, todo lo demás es información" - Albert Einstein"</Text>
         </View>
 
         <View>
