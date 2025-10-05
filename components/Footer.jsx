@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     footerTextTwo: {
         color: COLORS.white,
         textAlign: "center",
-        marginBottom: 40,
+        marginBottom: 30,
         fontSize: 12,
         fontStyle: "italic",
         fontFamily: "NunitoRegular"

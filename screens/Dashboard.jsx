@@ -1,4 +1,5 @@
-import { ScrollView, View, StyleSheet, Button, Text, TouchableOpacity, Image } from "react-native";
+import { useState } from "react";
+import { ScrollView, View, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { signOut } from "firebase/auth";
 
@@ -7,10 +8,13 @@ import { COLORS, FONT_SIZES } from "../styles.js";
 
 import Footer from "../components/Footer.jsx";
 import Header from "../components/Header.jsx";
-import Card from "../components/Card.jsx";
 import Subtitle from "../components/Subtitle.jsx";
+import SubjectsCarousel from "../components/Carousel.jsx";
+import OffcanvasMenu from "../components/OffcanvasMenu.jsx";
 
 const Dashboard = () => {
+  const [menuVisible, setMenuVisible] = useState(false);
+
   const handleLogout = async () => {
     try {
       await signOut(FIREBASE_AUTH);
@@ -18,26 +22,33 @@ const Dashboard = () => {
     } catch (error) {
       console.log("Error al cerrar sesión:", error);
     }
+
   };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Header />
+        <Header onMenuPress={() => setMenuVisible(true)} />
 
         <View style={styles.quoteContainer}>
-          <Text style={styles.quote}>"El aprendizaje es experiencia, todo lo demás es información" - Albert Einstein"</Text>
+          <Text style={styles.quote}>"El apredizaje es experiencia, todo lo demás es información" - Albert Einstein"</Text>
         </View>
 
         <View>
-          <Subtitle text={"Explorar catálogo de materias"}></Subtitle>
+          <Subtitle text={"Explorar catálogo de materias"} subtitleColor={COLORS.successGreen}></Subtitle>
+          <SubjectsCarousel />
         </View>
-        {/* Creacion del carrusel para el dashboard */}
-        <Card
-          subjectName={"Álgebra Lineal"}
-          imageSource={require("../assets/science.png")}
-        />
-
-      <Footer />
+        <View>
+          <Subtitle text={"Mis materias inscritas"} subtitleColor={COLORS.lightblue}></Subtitle>
+          <SubjectsCarousel />
+        </View>
+        <View>
+          <Subtitle text={"Mis materias aprobadas"} subtitleColor={COLORS.warningOrange}></Subtitle>
+          <SubjectsCarousel />
+        </View>
+        <OffcanvasMenu
+          visible={menuVisible}
+          onClose={() => setMenuVisible(false)}a />
+        <Footer />
       </ScrollView>
       {/* <Button title="Cerrar sesión" onPress={handleLogout} /> */}
     </SafeAreaView>
@@ -51,17 +62,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: 20,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  loadingText: {
-    color: COLORS.white,
-    marginTop: 10,
-    fontSize: 16,
   },
   quoteContainer: {
     padding: 10,
@@ -73,55 +73,7 @@ const styles = StyleSheet.create({
     fontFamily: "NunitoRegular",
     fontSize: 18,
     fontStyle: "italic",
-  },
-  errorContainer: {
-    margin: 20,
-    padding: 15,
-    backgroundColor: "rgba(255, 0, 0, 0.1)",
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  errorText: {
-    color: "#ff6b6b",
-    textAlign: "center",
-    marginBottom: 10,
-    fontSize: 14,
-  },
-  emptyContainer: {
-    margin: 20,
-    padding: 20,
-    alignItems: "center",
-  },
-  emptyText: {
-    color: COLORS.white,
-    fontSize: 16,
-  },
-  materiasContainer: {
-    padding: 15,
-  },
-  sectionTitle: {
-    color: COLORS.white,
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 15,
-  },
-  materiaCard: {
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  materiaTitle: {
-    color: COLORS.white,
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  materiaDesc: {
-    color: COLORS.white,
-    fontSize: 14,
-    marginTop: 5,
-    opacity: 0.8,
-  },
+  }
 });
 
 export default Dashboard;

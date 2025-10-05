@@ -1,6 +1,7 @@
 //Paleta de colores
 export const COLORS = {
   darkBlue: "#1E293B",
+  lightblue: "#6e9affff",
   white: "#FFFFFF",
   primaryBlue: "#2D9CDB",
   lightGray: "#D9D9D9",

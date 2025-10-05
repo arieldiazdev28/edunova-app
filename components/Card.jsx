@@ -1,7 +1,7 @@
 import { ScrollView, View, StyleSheet, Button, Text, TouchableOpacity, Image, ImageBackground } from "react-native";
 import { COLORS, FONT_SIZES } from "../styles.js";
 
-const Card = ({subjectName, imageSource}) => {
+const Card = ({ subjectName, imageSource }) => {
     return (
         <TouchableOpacity style={styles.card}>
             <View style={styles.cardImage}>
@@ -16,11 +16,14 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: COLORS.white,
         borderColor: COLORS.white,
-        margin: 25,
+        margin: 10,
         borderWidth: 1,
         borderRadius: 10,
         elevation: 20,
-        width: 200
+        shadowColor: COLORS.black,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        width: 200,
     },
     cardImage: {
         paddingBottom: 20
@@ -28,7 +31,7 @@ const styles = StyleSheet.create({
     image: {
         resizeMode: "cover",
         width: "100%",
-        height: 150,
+        height: 120,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10
     },

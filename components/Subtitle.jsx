@@ -1,15 +1,13 @@
 import {Text, StyleSheet} from "react-native";
 import { COLORS, FONT_SIZES } from "../styles.js";
 
-const Subtitle = ({text}) => {
-    return <Text style={styles.subtitle}>{text}</Text>
+const Subtitle = ({text, subtitleColor}) => {
+    return <Text style={[styles.subtitle, {color: subtitleColor}]}>{text}</Text>
 }
-export default Subtitle;
 
 const styles = StyleSheet.create({
     subtitle: {
-        color: COLORS.white,
-        textAlign: "center",
+        textAlign: "left",
         fontFamily: "NunitoSemiBold",
         fontSize: FONT_SIZES.large,
         fontWeight: "bold",
@@ -17,3 +15,4 @@ const styles = StyleSheet.create({
         padding: 10
     }
 })
+export default Subtitle;
