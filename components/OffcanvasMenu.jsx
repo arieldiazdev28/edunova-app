@@ -6,7 +6,7 @@ const { width } = Dimensions.get('window');
 
 const subjects = ['Inicio', 'Catálogo', 'Materias inscritas', 'Materias aprobadas', 'Cerrar sesión'];
 
-const OffcanvasMenu = ({ visible, onClose, onNavigate }) => {
+const OffcanvasMenu = ({ visible, onClose, handleLogout }) => {
     const slideAnim = useRef(new Animated.Value(-width)).current;
 
     useEffect(() => {
@@ -43,7 +43,7 @@ const OffcanvasMenu = ({ visible, onClose, onNavigate }) => {
                         key={index}
                         style={styles.menuItem}
                         onPress={() => {
-                            onNavigate(item);
+                            /* onNavigate(item); NO OLVIDAR COLOCAR PROP DE onNavigate para dar funcionalidad*/ 
                             onClose();
                         }}
                     >
@@ -51,7 +51,7 @@ const OffcanvasMenu = ({ visible, onClose, onNavigate }) => {
                             <Text style={styles.menuText}>
                                 {item}
                             </Text>
-                            <Image style={styles.nextArrowButton} source={require("../assets/nextArrow.png")}></Image>
+                            <Image onPress={handleLogout} style={styles.nextArrowButton} source={require("../assets/nextArrow.png")}></Image>
                         </View>
                     </TouchableOpacity>
                 ))}
