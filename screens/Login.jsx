@@ -3,6 +3,7 @@ import React, { useState } from "react";
 // --- Importaciones de Firebase ---
 import { FIREBASE_AUTH } from "../FirebaseConfig"; // Importa la instancia de autenticación de Firebase (auth).
 import { signInWithEmailAndPassword } from "firebase/auth"; // Importa la función específica de Firebase para iniciar sesión con email y contraseña.
+import { useAuth } from "../context/AuthContext.js";
 
 // --- Componentes de React Native (UI) ---
 import {
@@ -13,6 +14,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 
 // --- Recursos Locales y Componentes Reutilizables ---
@@ -24,17 +26,33 @@ const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const auth = FIREBASE_AUTH;
+  const { user } = useAuth();
 
   // Función para iniciar sesión
   const signIn = async () => {
+    if (!email || !password) {
+      Alert.alert("Error", "Por favor, ingresa tu coreo y contraseña");
+      return;
+    }
+
     setLoading(true);
     try {
-      const response = await signInWithEmailAndPassword(auth, email, password);
-      console.log(response);
+      await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
     } catch (error) {
-      console.log(error);
-      alert(error.message);
+      console.log("Error de inicio de sesión: ", error);
+      let errorMessage = "Ocurrió un error. Verifica tus credenciales";
+
+      if (
+        error.code === "auth/invalid-email" ||
+        error.code === "auth/user-not-found" ||
+        error.code === "auth/wrong-password"
+      ) {
+        errorMessage = "Correo o contraseña inválidos. Intenta de nuevo.";
+      } else if (error.code === "auth/too-many-requests") {
+        errorMessage = "Demasiados intentos fallidos. Intenta más tarde.";
+      }
+
+      Alert.alert("Inicio de Sesión Fallido", errorMessage);
     } finally {
       setLoading(false);
     }

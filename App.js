@@ -8,14 +8,18 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 //Importando conexión a Firebase
 import { FIREBASE_AUTH } from "./FirebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
+
+import { AuthProvider, useAuth } from "./context/AuthContext";
+
 //Importando componentes personalizados
 import Welcome from "./screens/Welcome";
 import Login from "./screens/Login";
 import SignUp from "./screens/SignUp";
 import Dashboard from "./screens/Dashboard";
 import CatalogoMaterias from "./screens/CatalogoMaterias";
+import CompletePerfil from "./screens/CompletePerfil";
 
-const Stack = createNativeStackNavigator();
+const AppStack = createNativeStackNavigator();
 const InsideStack = createNativeStackNavigator();
 const AuthStack = createNativeStackNavigator();
 
@@ -42,6 +46,12 @@ function AuthLayout() {
         component={SignUp}
         options={{ headerShown: false }}
       />
+
+      <AuthStack.Screen
+        name="CompletePerfil"
+        component={CompletePerfil}
+        options={{ headerShown: false }}
+      />
     </AuthStack.Navigator>
   );
 }
@@ -63,19 +73,10 @@ function InsideLayout() {
   );
 }
 
-export default function App() {
-  //Usuario activo en la sesión actual
-  const [user, setUser] = useState(null);
-
-  //Detecta si el usuario inicia sesión
-  useEffect(() => {
-    onAuthStateChanged(FIREBASE_AUTH, (user) => {
-      setUser(user);
-    });
-  }, []);
-
+function RootNavigator() {
+  const { user, loading, isProfileComplete } = useAuth();
   //Importando fuentes desde la carpeta fonts
-  const [loaded] = useFonts({
+  const [fontsLoaded] = useFonts({
     // Fuente: Montserrat
     MontserratBold: require("./assets/fonts/Montserrat-Bold.ttf"),
     MontserratSemiBold: require("./assets/fonts/Montserrat-SemiBold.ttf"),
@@ -88,30 +89,48 @@ export default function App() {
     NunitoRegular: require("./assets/fonts/Nunito-Regular.ttf"),
   });
 
-  if (!loaded) {
+  if (!fontsLoaded || loading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
   }
+
+  return (
+    <AppStack.Navigator>
+      {user && isProfileComplete ? (
+        <AppStack.Screen
+          name="InsideLayout"
+          component={InsideLayout}
+          options={{ headerShown: false }}
+        />
+      ) : user && !isProfileComplete ? (
+        <AppStack.Screen
+          name="AuthLayout"
+          component={AuthLayout}
+          options={{
+            headerShown: false,
+            initialParams: { screen: "CompletePerfil" },
+          }}
+        />
+      ) : (
+        <AppStack.Screen
+          name="AuthLayout"
+          component={AuthLayout}
+          options={{ headerShown: false }}
+        />
+      )}
+    </AppStack.Navigator>
+  );
+}
+
+export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        {user ? (
-          <Stack.Screen
-            name="InsideLayout"
-            component={InsideLayout}
-            options={{ headerShown: false }}
-          />
-        ) : (
-          <Stack.Screen
-            name="AuthLayout"
-            component={AuthLayout}
-            options={{ headerShown: false }}
-          />
-        )}
-      </Stack.Navigator>
+      <AuthProvider>
+        <RootNavigator />
+      </AuthProvider>
     </NavigationContainer>
   );
 }
