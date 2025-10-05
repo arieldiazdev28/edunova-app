@@ -47,7 +47,7 @@ const Dashboard = () => {
         </View>
         <OffcanvasMenu
           visible={menuVisible}
-          onClose={() => setMenuVisible(false)}a />
+          onClose={() => setMenuVisible(false)} />
         <Footer />
       </ScrollView>
       {/* <Button title="Cerrar sesión" onPress={handleLogout} /> */}

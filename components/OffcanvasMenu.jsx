@@ -1,8 +1,10 @@
 import React, { useRef, useEffect } from 'react';
-import { Animated, Text, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
+import { Animated, Text, TouchableOpacity, Dimensions, StyleSheet, View, Image } from 'react-native';
 import Logo from './Logo';
 
 const { width } = Dimensions.get('window');
+
+const subjects = ['Inicio', 'Catálogo', 'Materias inscritas', 'Materias aprobadas', 'Cerrar sesión'];
 
 const OffcanvasMenu = ({ visible, onClose, onNavigate }) => {
     const slideAnim = useRef(new Animated.Value(-width)).current;
@@ -27,11 +29,16 @@ const OffcanvasMenu = ({ visible, onClose, onNavigate }) => {
                     { transform: [{ translateX: slideAnim }] },
                 ]}
             >
-                <Text style={styles.menuTitle}>
-                    <Logo />
-                </Text>
+                <View style={styles.offcanvasHeader}>
+                    <Text style={styles.menuTitle}>
+                        <Logo />
+                    </Text>
+                    <TouchableOpacity onPress={onClose}>
+                        <Image style={styles.closeButton} source={require("../assets/close.png")} />
+                    </TouchableOpacity>
+                </View>
 
-                {['Inicio', 'Catálogo', 'Materias inscritas', 'Materias aprobadas', 'Cerrar sesión'].map((item, index) => (
+                {subjects.map((item, index) => (
                     <TouchableOpacity
                         key={index}
                         style={styles.menuItem}
@@ -40,7 +47,12 @@ const OffcanvasMenu = ({ visible, onClose, onNavigate }) => {
                             onClose();
                         }}
                     >
-                        <Text style={styles.menuText}>{item}</Text>
+                        <View style={styles.offcanvasItem}>
+                            <Text style={styles.menuText}>
+                                {item}
+                            </Text>
+                            <Image style={styles.nextArrowButton} source={require("../assets/nextArrow.png")}></Image>
+                        </View>
                     </TouchableOpacity>
                 ))}
             </Animated.View>
@@ -68,10 +80,20 @@ const styles = StyleSheet.create({
         zIndex: 2,
         elevation: 10,
     },
+    offcanvasHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 20
+    },
+    offcanvasItem: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center"
+    },
     menuTitle: {
         fontSize: 22,
         fontWeight: 'bold',
-        marginBottom: 20,
     },
     menuItem: {
         paddingVertical: 15,
@@ -82,6 +104,14 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontFamily: "Nunito"
     },
+    closeButton: {
+        height: 25,
+        width: 25,
+    },
+    nextArrowButton: {
+        height: 15,
+        width: 15,
+    }
 });
 
 export default OffcanvasMenu;
