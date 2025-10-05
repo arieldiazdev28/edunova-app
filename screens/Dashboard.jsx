@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { signOut } from "firebase/auth";
-
+import { useAuth } from "../context/AuthContext.js";
 import { FIREBASE_AUTH } from "../FirebaseConfig";
 import { COLORS, FONT_SIZES } from "../styles.js";
 
@@ -20,6 +20,9 @@ import Header from "../components/Header.jsx";
 import api from "../api.js";
 
 const Dashboard = () => {
+  const { profileData } = useAuth();
+  const nombreUsuario = profileData?.nombre || "Invitado";
+
   const [materias, setMaterias] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -105,7 +108,8 @@ const Dashboard = () => {
             ))}
           </View>
         )}
-        {/* <Button title="Cerrar sesión" onPress={handleLogout} /> */}
+        <Button title="Cerrar sesión" onPress={handleLogout} />
+        <Text>¡Bienvenido de vuelta, {nombreUsuario}!</Text>
         <Footer />
       </ScrollView>
     </SafeAreaView>

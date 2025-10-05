@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { FIREBASE_AUTH } from "../FirebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
-// --- Componentes de React Native (UI) ---
+// --- Componentes de React Native ---
 import {
   Text,
   View,
@@ -20,6 +20,9 @@ import { COLORS, FONT_SIZES } from "../styles.js";
 import Logo from "../components/Logo";
 import CustomInput from "../components/CustomInput.jsx";
 
+// --- Peticiones a la API ---
+import api from "../api.js";
+
 const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,6 +37,11 @@ const SignUp = ({ navigation }) => {
         email,
         password
       );
+
+      const user = response.user;
+      const firebaseUid = user.uid;
+
+      navigation.replace("CompletePerfil", { firebaseUid });
       console.log(response);
     } catch (error) {
       console.log(error);
