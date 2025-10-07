@@ -14,7 +14,8 @@ export const COLORS = {
 //Tamaño de fuentes
 export const FONT_SIZES = {
   small: 12,
-  medimum: 16,
+  medium: 16,
+  medium_2: 18,
   large: 20,
   xl: 24,
 };
