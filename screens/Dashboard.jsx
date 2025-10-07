@@ -14,28 +14,17 @@ import { useAuth } from "../context/AuthContext.js";
 import { FIREBASE_AUTH } from "../FirebaseConfig";
 import { COLORS, FONT_SIZES } from "../styles.js";
 
+import Carousel from "../components/Carousel.jsx";
+import Subtitle from "../components/Subtitle.jsx";
 import Footer from "../components/Footer.jsx";
 import Header from "../components/Header.jsx";
 
 import api from "../api.js";
 
 const Dashboard = () => {
-  const { profileData } = useAuth();
-  const nombreUsuario = profileData?.nombre || "Invitado";
-
   const [materias, setMaterias] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  //Función para cerrar sesión
-  const handleLogout = async () => {
-    try {
-      await signOut(FIREBASE_AUTH);
-      console.log("Sesión cerrada");
-    } catch (error) {
-      console.log("Error al cerrar sesión:", error);
-    }
-  };
 
   //Función que obtiene la información de las materias
   const get_materias = async () => {
@@ -97,19 +86,34 @@ const Dashboard = () => {
           </View>
         ) : (
           <View style={styles.materiasContainer}>
-            <Text style={styles.sectionTitle}>Mis Materias</Text>
-            {materias.map((materia) => (
-              <View key={materia.idMateria} style={styles.materiaCard}>
-                <Text style={styles.materiaTitle}>{materia.titulo}</Text>
-                {materia.descripcion && (
-                  <Text style={styles.materiaDesc}>{materia.descripcion}</Text>
-                )}
-              </View>
-            ))}
+            {/* Sección del catálogo de materias */}
+            <View>
+              <Subtitle
+                text={"Explorar catálogo de materias"}
+                subtitleColor={COLORS.successGreen}
+              />
+              <Carousel items={materias} keyField="idMateria" />
+            </View>
+
+            {/* Sección Tus Materias */}
+            <View>
+              <Subtitle
+                text={"Mis materias inscritas"}
+                subtitleColor={COLORS.primaryBlue}
+              />
+              <Carousel items={materias} keyField="idMateria" />
+            </View>
+
+            {/* Sección Nuestras Materias */}
+            <View>
+              <Subtitle
+                text={"Mis materias aprobadas"}
+                subtitleColor={COLORS.warningOrange}
+              />
+              <Carousel items={materias} keyField="idMateria" />
+            </View>
           </View>
         )}
-        <Button title="Cerrar sesión" onPress={handleLogout} />
-        <Text>¡Bienvenido de vuelta, {nombreUsuario}!</Text>
         <Footer />
       </ScrollView>
     </SafeAreaView>
@@ -144,7 +148,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "NunitoRegular",
     fontSize: 18,
-    fontStyle: "italic",
   },
   errorContainer: {
     margin: 20,
@@ -170,29 +173,6 @@ const styles = StyleSheet.create({
   },
   materiasContainer: {
     padding: 15,
-  },
-  sectionTitle: {
-    color: COLORS.white,
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 15,
-  },
-  materiaCard: {
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  materiaTitle: {
-    color: COLORS.white,
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  materiaDesc: {
-    color: COLORS.white,
-    fontSize: 14,
-    marginTop: 5,
-    opacity: 0.8,
   },
 });
 
