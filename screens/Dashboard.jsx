@@ -21,7 +21,7 @@ import Header from "../components/Header.jsx";
 
 import api from "../api.js";
 
-const Dashboard = () => {
+const Dashboard = ({ navigation }) => {
   const [materias, setMaterias] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -66,8 +66,6 @@ const Dashboard = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Header />
-
         <View style={styles.quoteContainer}>
           <Text style={styles.quote}>
             "El aprendizaje es experiencia, todo lo demás es información" -
@@ -141,7 +139,7 @@ const styles = StyleSheet.create({
   },
   quoteContainer: {
     padding: 10,
-    marginVertical: 10,
+    marginVertical: 5,
   },
   quote: {
     color: COLORS.white,

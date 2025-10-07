@@ -1,13 +1,17 @@
 //Importando hooks, componentes nativos de React y recursos
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, ActivityIndicator } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  Text,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 //Importando librerías para la navegación
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-//Importando conexión a Firebase
-import { FIREBASE_AUTH } from "./FirebaseConfig";
-import { onAuthStateChanged } from "firebase/auth";
 
 import { AuthProvider, useAuth } from "./context/AuthContext";
 
@@ -17,7 +21,12 @@ import Login from "./screens/Login";
 import SignUp from "./screens/SignUp";
 import Dashboard from "./screens/Dashboard";
 import CatalogoMaterias from "./screens/CatalogoMaterias";
+import MateriasInscritas from "./screens/MateriasInscritas";
+import MateriasAprobadas from "./screens/MateriasAprobadas";
 import CompletePerfil from "./screens/CompletePerfil";
+import CustomDrawer from "./components/CustomDrawer";
+import Logo from "./components/Logo";
+import { COLORS } from "./styles";
 
 const AppStack = createNativeStackNavigator();
 const InsideStack = createNativeStackNavigator();
@@ -56,20 +65,77 @@ function AuthLayout() {
   );
 }
 
-/* Función que configura la navegación al Dashboard */
+/* Función que configura la navegación al Dashboard con menú personalizado */
 function InsideLayout() {
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [currentScreen, setCurrentScreen] = useState("Dashboard");
+  const navigationRef = React.useRef(null);
+
   return (
-    <InsideStack.Navigator>
-      <InsideStack.Screen
-        name="Dashboard"
-        component={Dashboard}
-        options={{ headerShown: false }}
+    <>
+      <InsideStack.Navigator
+        screenOptions={({ navigation, route }) => {
+          // Guardar la referencia de navegación usando ref
+          navigationRef.current = navigation;
+
+          return {
+            headerStyle: {
+              backgroundColor: COLORS.darkBlue,
+            },
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontFamily: "MontserratBold",
+            },
+            headerTitle: () => (
+              <Logo fontColor={COLORS.primaryBlue} fontSize={30} />
+            ),
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => setDrawerVisible(true)}
+                style={styles.menuButton}
+              >
+                <Text style={styles.menuIcon}>☰</Text>
+              </TouchableOpacity>
+            ),
+            headerTitleAlign: "center",
+          };
+        }}
+        screenListeners={{
+          state: (e) => {
+            const route = e.data.state.routes[e.data.state.index];
+            setCurrentScreen(route.name);
+          },
+        }}
+      >
+        <InsideStack.Screen
+          name="Dashboard"
+          component={Dashboard}
+          options={{ headerShown: true }}
+        />
+        <InsideStack.Screen
+          name="CatalogoMaterias"
+          component={CatalogoMaterias}
+          options={{ headerShown: true }}
+        />
+        <InsideStack.Screen
+          name="MateriasAprobadas"
+          component={MateriasAprobadas}
+          options={{ headerShown: true }}
+        />
+        <InsideStack.Screen
+          name="MateriasInscritas"
+          component={MateriasInscritas}
+          options={{ headerShown: true }}
+        />
+      </InsideStack.Navigator>
+
+      <CustomDrawer
+        visible={drawerVisible}
+        onClose={() => setDrawerVisible(false)}
+        navigation={navigationRef.current}
+        currentScreen={currentScreen}
       />
-      <InsideStack.Screen
-        name="CatalogoMaterias"
-        component={CatalogoMaterias}
-      />
-    </InsideStack.Navigator>
+    </>
   );
 }
 
@@ -125,6 +191,23 @@ function RootNavigator() {
   );
 }
 
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  menuButton: {
+    marginLeft: 15,
+    padding: 5,
+  },
+  menuIcon: {
+    fontSize: 24,
+    color: "#fff",
+    fontWeight: "bold",
+  },
+});
+
 export default function App() {
   return (
     <NavigationContainer>
@@ -134,11 +217,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
