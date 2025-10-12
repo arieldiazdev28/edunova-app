@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://192.168.10.109:5000/edunova";
+const API_BASE_URL = "http://192.168.0.3:5000/edunova";
 // const API_BASE_URL = "http://10.0.2.2:5000/edunova"; // Para Android Studio Emulator
 
 const DEFAULT_TIMEOUT = 60000; // 60 segundos

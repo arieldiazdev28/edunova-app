@@ -1,4 +1,5 @@
 import React, { use, useState } from "react";
+import { COLORS } from "../styles.js";
 import {
   View,
   Text,
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     padding: 20,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: "#fff",
   },
   container: {
     width: "100%",
@@ -171,7 +172,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   subtitle: {
-    fontSize: 16,
+    fontFamily: "Nunito",
+    fontSize: 18,
     color: "#666",
     marginBottom: 30,
     textAlign: "center",
@@ -197,7 +199,7 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
   },
   button: {
-    backgroundColor: "red",
+    backgroundColor: COLORS.primaryBlue,
     padding: 15,
     borderRadius: 8,
     alignItems: "center",

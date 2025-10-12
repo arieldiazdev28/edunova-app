@@ -21,7 +21,7 @@ import Header from "../components/Header.jsx";
 
 import api from "../api.js";
 
-const Dashboard = ({ navigation }) => {
+const Dashboard = ({ navigation, openDrawer, setCurrentScreen }) => {
   const [materias, setMaterias] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -50,6 +50,10 @@ const Dashboard = ({ navigation }) => {
 
   useEffect(() => {
     get_materias();
+    // Informar al layout que la pantalla actual es Dashboard
+    if (typeof setCurrentScreen === "function") {
+      setCurrentScreen("Dashboard");
+    }
   }, []);
 
   if (loading) {
@@ -65,6 +69,8 @@ const Dashboard = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Header con botón de abrir drawer */}
+      <Header openDrawer={openDrawer} />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.quoteContainer}>
           <Text style={styles.quote}>
@@ -90,7 +96,11 @@ const Dashboard = ({ navigation }) => {
                 text={"Explorar catálogo de materias"}
                 subtitleColor={COLORS.successGreen}
               />
-              <Carousel items={materias} keyField="idMateria" />
+              <Carousel
+                items={materias}
+                keyField="idMateria"
+                onPressItem={(item) => navigation.navigate("MostrarInfoMateria", { materia: item })}
+              />
             </View>
 
             {/* Sección Tus Materias */}

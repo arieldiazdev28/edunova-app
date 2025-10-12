@@ -2,7 +2,7 @@ import { View, FlatList, StyleSheet } from "react-native";
 import Card from "./Card";
 import { COLORS } from "../styles.js";
 
-const Carousel = ({ items, keyField }) => {
+const Carousel = ({ items, keyField, onPressItem }) => {
   return (
     <View style={styles.container}>
       <FlatList
@@ -10,7 +10,7 @@ const Carousel = ({ items, keyField }) => {
         horizontal
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item[keyField]}
-        renderItem={({ item }) => <Card subject={item} />}
+        renderItem={({ item }) => <Card subject={item} onPress={() => onPressItem?.(item)} />}
         contentContainerStyle={styles.subjectCarousel}
       />
     </View>

@@ -25,6 +25,7 @@ import MateriasInscritas from "./screens/MateriasInscritas";
 import MateriasAprobadas from "./screens/MateriasAprobadas";
 import CompletePerfil from "./screens/CompletePerfil";
 import CustomDrawer from "./components/CustomDrawer";
+import MostrarInfoMateria from "./screens/MostrarInfoMateria";
 import Logo from "./components/Logo";
 import { COLORS } from "./styles";
 
@@ -75,43 +76,22 @@ function InsideLayout() {
     <>
       <InsideStack.Navigator
         screenOptions={({ navigation, route }) => {
-          // Guardar la referencia de navegación usando ref
+          // Guardar la referencia de navegación
           navigationRef.current = navigation;
-
-          return {
-            headerStyle: {
-              backgroundColor: COLORS.darkBlue,
-            },
-            headerTintColor: "#fff",
-            headerTitleStyle: {
-              fontFamily: "MontserratBold",
-            },
-            headerTitle: () => (
-              <Logo fontColor={COLORS.primaryBlue} fontSize={30} />
-            ),
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => setDrawerVisible(true)}
-                style={styles.menuButton}
-              >
-                <Text style={styles.menuIcon}>☰</Text>
-              </TouchableOpacity>
-            ),
-            headerTitleAlign: "center",
-          };
-        }}
-        screenListeners={{
-          state: (e) => {
-            const route = e.data.state.routes[e.data.state.index];
-            setCurrentScreen(route.name);
-          },
+          return {}; // <- IMPORTANTE: devolver un objeto válido
         }}
       >
         <InsideStack.Screen
-          name="Dashboard"
-          component={Dashboard}
-          options={{ headerShown: true }}
-        />
+        name="Dashboard" 
+        options={{ headerShown: false }}>
+          {(props) => (
+            <Dashboard
+              {...props}
+              openDrawer={() => setDrawerVisible(true)}
+              setCurrentScreen={setCurrentScreen}
+            />
+          )}
+        </InsideStack.Screen>
         <InsideStack.Screen
           name="CatalogoMaterias"
           component={CatalogoMaterias}
@@ -126,6 +106,11 @@ function InsideLayout() {
           name="MateriasInscritas"
           component={MateriasInscritas}
           options={{ headerShown: true }}
+        />
+        <InsideStack.Screen
+          name="MostrarInfoMateria"
+          component={MostrarInfoMateria}
+          options={{ headerShown: false }}
         />
       </InsideStack.Navigator>
 
