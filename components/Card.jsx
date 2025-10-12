@@ -1,9 +1,9 @@
 import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 import { COLORS, FONT_SIZES } from "../styles.js";
 
-const Card = ({ subject }) => {
+const Card = ({ subject, onPress }) => {
   return (
-    <TouchableOpacity style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={onPress}>
       <View style={styles.cardImage}>
         <Image source={require("../assets/math.jpg")} style={styles.image} />
       </View>

@@ -1,22 +1,34 @@
-import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import React, { useState, useMemo } from "react";
+import { View, StyleSheet, Text } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 
 const SingleSelectPicker = ({
-  options,
+  options = [],
   selectedValue,
   onValueChange,
-  placeholder,
-  title,
+  placeholder = "Selecciona...",
+  title = "Selecciona una opción",
+  label = null,
+  error = null,
 }) => {
-  // El DropDownPicker maneja internamente sus propios estados de abierto/cerrado
   const [open, setOpen] = useState(false);
+  const [items, setItems] = useState(
 
-  // Se usa setValue/setItems como setter de los estados pasados por props
-  const [items, setItems] = useState(options);
+    options.map((opt) =>
+      typeof opt === "string" ? { label: opt, value: opt } : opt
+    )
+  );
+
+  // zIndex dinámico para evitar que se pongan otros elementos encima
+  const containerStyle = useMemo(
+    () => [styles.container, open && styles.containerOpen],
+    [open]
+  );
 
   return (
-    <View style={[styles.container, open && { zIndex: 100 }]}>
+    <View style={containerStyle}>
+      {label ? <Text style={styles.label}>{label}</Text> : null}
+
       <DropDownPicker
         open={open}
         value={selectedValue}
@@ -27,25 +39,80 @@ const SingleSelectPicker = ({
         placeholder={placeholder}
         listMode="MODAL"
         modalTitle={title}
-        style={styles.dropdown}
+        modalProps={{
+          animationType: "slide",
+        }}
+        style={[styles.dropdown, error ? styles.dropdownError : null]}
         containerStyle={styles.dropdownContainer}
+        dropDownContainerStyle={styles.dropDownContainer}
+        textStyle={styles.text}
+        placeholderStyle={styles.placeholder}
+        arrowIconStyle={styles.arrow}
+        tickIconStyle={styles.tick}
+        zIndex={1000}
       />
+
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
     </View>
   );
 };
 
-// Estilos
 const styles = StyleSheet.create({
-  // Contenedor que necesita zIndex para el correcto funcionamiento del desplegable
   container: {
-    marginBottom: 15,
+    marginBottom: 16,
   },
-  dropdown: {
-    backgroundColor: "#fff",
-    borderColor: "#ddd",
+  containerOpen: {
+    zIndex: 9999,
+  },
+  label: {
+    fontSize: 13,
+    color: "#6b7280",
+    marginBottom: 6,
+    marginLeft: 4,
+    fontWeight: "600",
   },
   dropdownContainer: {
-    height: 50,
+    height: 52,
+  },
+  dropdown: {
+    backgroundColor: "#ffffff",
+    borderColor: "#e6e9ee",
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  dropDownContainer: {
+    backgroundColor: "#fff",
+    borderColor: "#e6e9ee",
+    borderRadius: 10,
+    marginTop: 4,
+    elevation: 6,
+  },
+  text: {
+    fontSize: 15,
+    color: "#111827",
+  },
+  placeholder: {
+    color: "#9ca3af",
+  },
+  arrow: {
+    tintColor: "#9ca3af",
+  },
+  tick: {
+    tintColor: "#10b981",
+  },
+  dropdownError: {
+    borderColor: "#f87171",
+  },
+  errorText: {
+    color: "#ef4444",
+    marginTop: 6,
+    marginLeft: 4,
+    fontSize: 12,
   },
 });
 
