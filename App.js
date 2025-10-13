@@ -82,8 +82,8 @@ function InsideLayout() {
         }}
       >
         <InsideStack.Screen
-        name="Dashboard" 
-        options={{ headerShown: false }}>
+          name="Dashboard"
+          options={{ headerShown: false }}>
           {(props) => (
             <Dashboard
               {...props}
@@ -94,9 +94,14 @@ function InsideLayout() {
         </InsideStack.Screen>
         <InsideStack.Screen
           name="CatalogoMaterias"
-          component={CatalogoMaterias}
-          options={{ headerShown: true }}
-        />
+          options={{ headerShown: false }}>
+          {(props) => (
+            <CatalogoMaterias
+              {...props}
+              openDrawer={() => setDrawerVisible(true)}
+            />
+          )}
+        </InsideStack.Screen>
         <InsideStack.Screen
           name="MateriasAprobadas"
           component={MateriasAprobadas}
@@ -109,9 +114,14 @@ function InsideLayout() {
         />
         <InsideStack.Screen
           name="MostrarInfoMateria"
-          component={MostrarInfoMateria}
-          options={{ headerShown: false }}
-        />
+          options={{ headerShown: false }}>
+          {(props) => (
+            <MostrarInfoMateria
+              {...props}
+              openDrawer={() => setDrawerVisible(true)}
+            />
+          )}
+        </InsideStack.Screen>
       </InsideStack.Navigator>
 
       <CustomDrawer

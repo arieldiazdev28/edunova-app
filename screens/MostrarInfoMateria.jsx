@@ -10,10 +10,11 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "../styles.js";
+import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import api from "../api.js"; //API en uso
 
-const MostrarInfoMateria = ({ route, navigation }) => {
+const MostrarInfoMateria = ({ route, navigation, openDrawer }) => {
     const materiaParam = route.params?.materia || null;
     const [materia, setMateria] = useState(materiaParam);
     const [loading, setLoading] = useState(false);
@@ -74,7 +75,7 @@ const MostrarInfoMateria = ({ route, navigation }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-
+            <Header openDrawer={openDrawer}/>
             <ScrollView contentContainerStyle={styles.content}>
                 <Text style={styles.title}>{materia.titulo}</Text>
 

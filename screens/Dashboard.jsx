@@ -9,10 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { signOut } from "firebase/auth";
-import { useAuth } from "../context/AuthContext.js";
-import { FIREBASE_AUTH } from "../FirebaseConfig";
-import { COLORS, FONT_SIZES } from "../styles.js";
+import { COLORS } from "../styles.js";
 
 import Carousel from "../components/Carousel.jsx";
 import Subtitle from "../components/Subtitle.jsx";
