@@ -1,66 +1,133 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
+  SafeAreaView,
   ScrollView,
   View,
+  Alert,
   StyleSheet,
   Button,
   Text,
   ActivityIndicator,
-  Alert,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { signOut } from "firebase/auth";
-import { useAuth } from "../context/AuthContext.js";
-import { FIREBASE_AUTH } from "../FirebaseConfig";
-import { COLORS, FONT_SIZES } from "../styles.js";
+import { useFocusEffect } from "@react-navigation/native";
 
-import Carousel from "../components/Carousel.jsx";
-import Subtitle from "../components/Subtitle.jsx";
-import Footer from "../components/Footer.jsx";
-import Header from "../components/Header.jsx";
-
+import { useAuth } from "../context/AuthContext";
 import api from "../api.js";
+import { COLORS } from "../styles.js";
 
-const Dashboard = ({ navigation, openDrawer, setCurrentScreen }) => {
+import Subtitle from "../components/Subtitle.jsx";
+import Carousel from "../components/Carousel.jsx";
+import Header from "../components/Header.jsx";
+import Footer from "../components/Footer.jsx";
+
+const Dashboard = ({ navigation, openDrawer, setCurrentScreen, route }) => {
+  const { user } = useAuth();
   const [materias, setMaterias] = useState([]);
+  const [materiasInscritas, setMateriasInscritas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  //Función que obtiene la información de las materias
-  const get_materias = async () => {
-    setLoading(true);
-    setError(null);
+  // Función auxiliar para manejar errores
+  const manejarError = (error, mensaje = "Error al conectar con el servidor") => {
+    const errorMessage = error?.message || mensaje;
+    console.error(errorMessage);
+    setError(errorMessage);
+    Alert.alert("Error", errorMessage);
+  };
 
+  // Obtener catálogo de materias
+  const obtenerMaterias = async () => {
     try {
-      console.log("Obteniendo materias...");
-      const data = await api.get("/materias");
-      console.log("Materias obtenidas:", data.materias?.length || 0);
+      console.log("Obteniendo catálogo de materias...");
+      const { materias } = await api.get("/materias");
 
-      setMaterias(data.materias || []);
+      console.log(`Materias obtenidas: ${materias?.length || 0}`);
+      setMaterias(materias || []);
+      return materias;
     } catch (error) {
-      console.error("Error al obtener materias:", error.message);
-
-      const errorMessage = error.message || "Error al conectar con el servidor";
-      setError(errorMessage);
-      Alert.alert("Error de Conexión", errorMessage);
-    } finally {
-      setLoading(false);
+      manejarError(error, "Error al obtener el catálogo de materias");
+      return [];
     }
   };
 
-  useEffect(() => {
-    get_materias();
-    // Informar al layout que la pantalla actual es Dashboard
-    if (typeof setCurrentScreen === "function") {
-      setCurrentScreen("Dashboard");
+  // Obtener materias inscritas del usuario
+  const obtenerMateriasInscritas = async () => {
+    if (!user?.uid) {
+      console.warn("Usuario no disponible");
+      return [];
     }
-  }, []);
 
-  if (loading) {
+    try {
+      console.log("Obteniendo materias inscritas...");
+      const { materias } = await api.get(`/mis_materias/${user.uid}`);
+
+      console.log(`Materias inscritas: ${materias?.length || 0}`);
+      setMateriasInscritas(materias || []);
+      return materias;
+    } catch (error) {
+      // No mostrar alerta si no hay materias (404)
+      if (error.response?.status !== 404) {
+        manejarError(error, "Error al obtener tus materias inscritas");
+      }
+      return [];
+    }
+  };
+
+  // Cargar datos al montar el componente
+  useEffect(() => {
+    const cargarDatos = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        // Ejecutar ambas peticiones en paralelo
+        await Promise.all([obtenerMaterias(), obtenerMateriasInscritas()]);
+      } catch (error) {
+        console.error("Error general al cargar datos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarDatos();
+
+    // Actualizar pantalla actual en el drawer
+    setCurrentScreen?.("Dashboard");
+  }, [user?.uid, setCurrentScreen]);
+
+  // Usar useFocusEffect para recargar datos cuando vuelves a la pantalla
+  useFocusEffect(
+    useCallback(() => {
+      // Si viene del componente MostrarInfoMateria con materiasActualizadas
+      if (route?.params?.materiasActualizadas) {
+        console.log("Recargando listas de materias...");
+
+        const recargarDatos = async () => {
+          setLoading(true);
+          try {
+            await Promise.all([
+              obtenerMaterias(),
+              obtenerMateriasInscritas(),
+            ]);
+
+            // Limpiar el parámetro después de usarlo
+            navigation.setParams({ materiasActualizadas: false });
+          } finally {
+            setLoading(false);
+          }
+        };
+
+        recargarDatos();
+      }
+    }, [route?.params?.materiasActualizadas, navigation])
+  );
+
+  if (loading && materias.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
+        <Header openDrawer={openDrawer} />
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={COLORS.white} />
+          <ActivityIndicator size="large" color={COLORS.primaryBlue} />
           <Text style={styles.loadingText}>Cargando materias...</Text>
         </View>
       </SafeAreaView>
@@ -69,7 +136,6 @@ const Dashboard = ({ navigation, openDrawer, setCurrentScreen }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header con botón de abrir drawer */}
       <Header openDrawer={openDrawer} />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.quoteContainer}>
@@ -82,7 +148,7 @@ const Dashboard = ({ navigation, openDrawer, setCurrentScreen }) => {
         {error ? (
           <View style={styles.errorContainer}>
             <Text style={styles.errorText}>{error}</Text>
-            <Button title="Reintentar" onPress={get_materias} />
+            <Button title="Reintentar" onPress={obtenerMateriasInscritas} />
           </View>
         ) : materias.length === 0 ? (
           <View style={styles.emptyContainer}>
@@ -99,18 +165,29 @@ const Dashboard = ({ navigation, openDrawer, setCurrentScreen }) => {
               <Carousel
                 items={materias}
                 keyField="idMateria"
-                onPressItem={(item) => navigation.navigate("MostrarInfoMateria", { materia: item })}
+                onPressItem={(item) => {
+                  // Verificar si el usuario ya está inscrito en esta materia
+                  const estaInscrito = materiasInscritas.some(
+                    (m) => m.idMateria === item.idMateria
+                  );
+                  navigation.navigate("MostrarInfoMateria", { 
+                    materia: item,
+                    usuarioInscrito: estaInscrito 
+                  });
+                }}
               />
             </View>
 
             {/* Sección Tus Materias */}
-            <View>
-              <Subtitle
-                text={"Mis materias inscritas"}
-                subtitleColor={COLORS.primaryBlue}
-              />
-              <Carousel items={materias} keyField="idMateria" />
-            </View>
+            {materiasInscritas.length > 0 && (
+              <View>
+                <Subtitle
+                  text={"Mis materias inscritas"}
+                  subtitleColor={COLORS.primaryBlue}
+                />
+                <Carousel items={materiasInscritas} keyField="idMateria" />
+              </View>
+            )}
 
             {/* Sección Nuestras Materias */}
             <View>
