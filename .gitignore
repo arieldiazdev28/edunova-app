@@ -42,3 +42,7 @@ FirebaseConfig.js
 # generated native folders
 /ios
 /android
+
+
+# api configuration file
+api.js

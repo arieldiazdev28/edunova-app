@@ -1,3 +1,4 @@
+
 import { useEffect, useState, useCallback } from "react";
 import {
   SafeAreaView,
@@ -170,22 +171,31 @@ const Dashboard = ({ navigation, openDrawer, setCurrentScreen, route }) => {
                   const estaInscrito = materiasInscritas.some(
                     (m) => m.idMateria === item.idMateria
                   );
-                  navigation.navigate("MostrarInfoMateria", { 
+                  navigation.navigate("MostrarInfoMateria", {
                     materia: item,
-                    usuarioInscrito: estaInscrito 
+                    usuarioInscrito: estaInscrito,
                   });
                 }}
               />
             </View>
 
-            {/* Sección Tus Materias */}
+            {/* Sección Tus Materias - Solo se muestra si hay inscripciones */}
             {materiasInscritas.length > 0 && (
               <View>
                 <Subtitle
                   text={"Mis materias inscritas"}
                   subtitleColor={COLORS.primaryBlue}
                 />
-                <Carousel items={materiasInscritas} keyField="idMateria" />
+                <Carousel
+                  items={materiasInscritas}
+                  keyField="idMateria"
+                  onPressItem={(item) => {
+                    navigation.navigate("ContenidoMateria", {
+                      materiaId: item.idMateria,
+                      materiaTitulo: item.titulo,
+                    });
+                  }}
+                />
               </View>
             )}
 
