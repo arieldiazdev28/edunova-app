@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Text,
+  View,
   StyleSheet,
   Image,
   TouchableOpacity,
@@ -8,6 +9,8 @@ import {
   Alert,
   ScrollView,
 } from "react-native";
+
+import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "../styles.js";
 import Footer from "../components/Footer.jsx";
@@ -124,8 +127,10 @@ const MostrarInfoMateria = ({ navigation, route }) => {
 
   // Función para redirigir al contenido de la materia
   const handleAprender = async () => {
-    Alert.alert("Próximamente", "El contenido de esta materia estará disponible pronto");
-    // navigation.navigate("ContenidoMateria", { materiaId: materia.idMateria });
+   navigation.navigate("ContenidoMateria", {
+    materiaId: materia.idMateria,
+    materiaTitulo: materia.titulo
+   });
   };
 
   if (loading) {
@@ -146,9 +151,14 @@ const MostrarInfoMateria = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back-sharp" size={24} color="white" />
+          </TouchableOpacity>
+          <Text style={styles.title}>{materia.titulo}</Text>
+          <View style={{ width: 50 }} />
+        </View>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>{materia.titulo}</Text>
-
         <Image
           source={
             materia.imagen
@@ -200,6 +210,14 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
   },
+  header: {
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingHorizontal: 8,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   center: {
     flex: 1,
     justifyContent: "center",
@@ -208,7 +226,7 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: "center",
-    fontSize: 30,
+    fontSize: 24,
     color: COLORS.white,
     fontWeight: "800",
     margin: 15,
