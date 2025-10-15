@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://192.168.0.3:5000/edunova";
+const API_BASE_URL = "http://192.168.10.109:5000/edunova";
 // const API_BASE_URL = "http://10.0.2.2:5000/edunova"; // Para Android Studio Emulator
 
 const DEFAULT_TIMEOUT = 60000; // 60 segundos
@@ -53,12 +53,24 @@ const apiRequest = async (endpoint, options = {}) => {
     // Parsear JSON
     const data = await response.json();
 
+    // Crear objeto con status y datos
+    const result = {
+      status: response.status,
+      statusText: response.statusText,
+      ok: response.ok,
+      data: data,
+      // Para mantener compatibilidad con código existente
+      ...data
+    };
+
     // Si la respuesta no es exitosa, lanzar error
     if (!response.ok) {
-      throw new Error(data.message || `Error ${response.status}`);
+      const error = new Error(data.error || data.message || `Error ${response.status}`);
+      error.response = result;
+      throw error;
     }
 
-    return data;
+    return result;
   } catch (error) {
     console.error(`Error en ${endpoint}:`, error.message);
     throw error;
