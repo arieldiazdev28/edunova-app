@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView} from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
@@ -7,13 +7,19 @@ import CustomInput from "../components/CustomInput.jsx";
 import { COLORS } from "../styles.js";
 import ListaMaterias from "../components/ListaMaterias.jsx";
 
-const CatalogoMaterias = ({ openDrawer }) => {
+const CatalogoMaterias = ({ openDrawer, navigation }) => {
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedSearch(search.trim()), 300);
+    return () => clearTimeout(id);
+  }, [search]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
       <Header openDrawer={openDrawer} />
+      <ScrollView>
         <View style={styles.headerContent}>
           <Text style={styles.title}>¿Listo para tu próximo reto?</Text>
           <Text style={styles.subtitle}>Encuentra tu materia favorita y comienza hoy</Text>
@@ -28,7 +34,12 @@ const CatalogoMaterias = ({ openDrawer }) => {
 
         {/* Componente de lista de materias */}
         <View style={styles.containerList}>
-          <ListaMaterias />
+          <ListaMaterias
+            searchQuery={debouncedSearch}
+            onPressButton={(item) => {
+              const idParam = item.idMateria ?? item.id ?? null;
+              navigation.navigate("MostrarInfoMateria", { materia: item, id: idParam });
+            }} />
         </View>
         <Footer />
       </ScrollView>

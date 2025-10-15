@@ -27,7 +27,8 @@ const MostrarInfoMateria = ({ route, navigation, openDrawer }) => {
                 setLoading(true);
                 try {
                     const result = await api.get(`/materias/${route.params.id}`);
-                    setMateria(result.data);
+                    const fetched = result?.data ?? result?.materia ?? result ?? null;
+                    setMateria(fetched);
                 } catch (e) {
                     console.error(`Error al cargar la materia: ${e}`);
                     Alert.alert("Error", "No se pudieron cargar los datos.")
@@ -43,7 +44,8 @@ const MostrarInfoMateria = ({ route, navigation, openDrawer }) => {
         if (!materia) return;
         setInscribir(true);
         try {
-            const result = await api.post("/inscripciones", { idMateria: materia.idMateria });
+            const idToSend = materia.idMateria ?? materia.id ?? materia.materiaId ?? null;
+            const result = await api.post("/inscripciones", { idMateria: idToSend });
             if (result.status === 200 || result.status === 201) {
                 Alert.alert("Éxito", "Te has inscrito correctamente a la materia.");
                 navigation.goBack(); //Se actualiza el estado global
@@ -75,13 +77,12 @@ const MostrarInfoMateria = ({ route, navigation, openDrawer }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header openDrawer={openDrawer}/>
             <ScrollView contentContainerStyle={styles.content}>
+                <Header openDrawer={openDrawer} />
                 <Text style={styles.title}>{materia.titulo}</Text>
 
-                {/** Si tienes ruta de imagen en materia, úsala; si no, imagen por defecto */}
                 <Image
-                    source={materia.imagen ? { uri: materia.imagen } : require("../assets/math.jpg")}
+                    source={require("../assets/math.jpg")}
                     style={styles.image}
                 />
 
@@ -102,7 +103,7 @@ const MostrarInfoMateria = ({ route, navigation, openDrawer }) => {
                         <Text style={styles.enrollText}>Inscribirme</Text>
                     )}
                 </TouchableOpacity>
-                <Footer/>
+                <Footer />
             </ScrollView>
         </SafeAreaView>
     );

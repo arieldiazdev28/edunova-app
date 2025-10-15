@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { COLORS } from "../styles.js";
 
-const CardMateria = ({ subjectTitle, subjectImage, subjectDescription }) => {
+const CardMateria = ({ subjectTitle, subjectImage, subjectDescription, onPressButton }) => {
   return (
     <View style={styles.subjectCard}>
       <Image style={styles.subjectImage} source={subjectImage} />
@@ -9,7 +9,7 @@ const CardMateria = ({ subjectTitle, subjectImage, subjectDescription }) => {
         <Text style={styles.subjectTitle}>{subjectTitle}</Text>
         <Text style={styles.subjectDescription}>{subjectDescription}</Text>
         <View style={styles.subjectCardFooter}>
-          <TouchableOpacity style={styles.buttonSeeMore}>
+          <TouchableOpacity style={styles.buttonSeeMore} onPress={onPressButton}>
             <Text style={{ fontWeight: "500" }}>Ver más</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttonSignUp}>

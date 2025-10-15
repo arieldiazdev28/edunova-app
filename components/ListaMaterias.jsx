@@ -4,17 +4,15 @@ import api from "../api.js";
 import CardMateria from "./CardMateria.jsx";
 import { COLORS } from "../styles.js";
 
-// Descripciones e imágenes locales para las materias (ordenadas por índice)
-// Asumo que la API devuelve exactamente 8 items; si devuelve menos, se usará lo disponible.
 const LOCAL_DESCRIPTIONS = [
-  "Ecuaciones diferenciales de primer grado, ecuaciones diferenciales de grado superior y transformada de Laplace.",
-  "Fundamentos de álgebra lineal: matrices, determinantes y sistemas de ecuaciones.",
-  "Cálculo diferencial e integral con aplicaciones a problemas reales.",
-  "Conceptos básicos y avanzados de programación en JavaScript.",
-  "Estadística descriptiva e inferencial para análisis de datos.",
-  "Bases de datos relacionales: SQL, modelado y consultas.",
-  "Introducción a la física: mecánica y termodinámica.",
-  "Química general: estructura atómica y enlaces químicos."
+  "Sumérgete en los fundamentos básicos de las matemáticas y sus principales vertientes: aritmética, álgebra y geometría.",
+  "Aprende todo sobre el álgebra lineal en tres secciones completas de aprendizaje: matrices, determinantes y sistemas de ecuaciones.",
+  "Conviértete en un experto en el mundo de la química general: estructura atómica, enlaces químicos, reacciones y estequiometría.",
+  "Todo sobre los conceptos básicos y avanzados de programación estructurada con Python.",
+  "Conoce las estructuras de datos tanto lineales como no lineales, algoritmos de búsqueda y ordenamiento utilizados en el mundo real.",
+  "Aprendizaje acerca de las bases de datos relacionales mediante el uso de SQL, el modelado de datos, consultas y reglas de normalización de entidades.",
+  "El cálculo en un nivel más avanzado para enriquecer tu conocimiento: integrales indefinidas, definidas y técnicas de integración.",
+  "Entiende los conceptos primordiales de la programación orientada a objetos y sus cuatro características que la conforman: la abstracción, el encapsulamiento, la herencia y polimorfismo."
 ];
 
 const LOCAL_IMAGES = [
@@ -28,8 +26,9 @@ const LOCAL_IMAGES = [
   require("../assets/math.jpg"),
 ];
 
-const ListaMaterias = () => {
-  const [materias, setMaterias] = useState([]);
+const ListaMaterias = ({ onPressButton, searchQuery = "" }) => {
+  const [materias, setMaterias] = useState([]); //Lista original
+  const [filtro, setFiltro] = useState([]); //Lista filtrada
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -45,12 +44,19 @@ const ListaMaterias = () => {
 
         const combined = items.map((item, idx) => ({
           id: item.id ?? idx.toString(),
-          title: item.titulo ?? item.nombre ?? item.title ?? `Materia ${idx + 1}`,
-          description: LOCAL_DESCRIPTIONS[idx] ?? "Descripción pendiente",
-          image: LOCAL_IMAGES[idx] ?? LOCAL_IMAGES[0],
+          idMateria: item.idMateria ?? item.id ?? null,
+          // Uso de la informacion proveniente de la API, con soporte de llaves multiples.
+
+          title: item.titulo ?? `Materia ${idx + 1}`, //Titulo de la materia fuera de la Card
+          idMateria: item.idMateria ?? item.id ?? null, //ID de la materia
+          titulo: item.titulo ?? item.nombre ?? item.title ?? `Materia ${idx + 1}`, //Titulo de la materia dentro de la Card
+          description: LOCAL_DESCRIPTIONS[idx] ?? "Descripción pendiente", //Descriptor de la materia fuera de la Card
+          descripcion: item.descripcion ?? item.resumen ?? item.description ?? LOCAL_DESCRIPTIONS[idx] ?? "Descripción pendiente", //Descripcion dentro de la Card
+          image: item.imagen ?? item.image ?? LOCAL_IMAGES[idx] ?? LOCAL_IMAGES[0],
         }));
 
         setMaterias(combined);
+        setFiltro(combined);
       } catch (err) {
         setError(err.message || "Error al obtener materias");
       } finally {
@@ -62,6 +68,26 @@ const ListaMaterias = () => {
       mounted = false;
     };
   }, []);
+
+  //Filtro que permite ver la opcion buscada de la lista del catalogo de materias
+  useEffect(() => {
+    if (!searchQuery) {
+      setFiltro(materias);
+      return;
+    }
+    const q = searchQuery.toLowerCase();
+    const result = materias.filter((item) => {
+      return (
+        String(item.title ?? "").toLowerCase().includes(q) ||
+        String(item.titulo ?? "").toLowerCase().includes(q) ||
+        String(item.description ?? "").toLowerCase().includes(q) ||
+        String(item.descripcion ?? "").toLowerCase().includes(q) ||
+        String(item.id ?? "").toLowerCase().includes(q) ||
+        String(item.idMateria ?? "").toLowerCase().includes(q)
+      );
+    });
+    setFiltro(result);
+  }, [searchQuery, materias]);
 
   if (loading) {
     return (
@@ -81,7 +107,7 @@ const ListaMaterias = () => {
 
   return (
     <FlatList
-      data={materias}
+      data={filtro}
       scrollEnabled={false}
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
@@ -89,6 +115,7 @@ const ListaMaterias = () => {
           subjectTitle={item.title}
           subjectDescription={item.description}
           subjectImage={item.image}
+          onPressButton={() => onPressButton(item)}
         />
       )}
       ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
