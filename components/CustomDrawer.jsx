@@ -23,7 +23,7 @@ const CustomDrawer = ({ visible, onClose, navigation, currentScreen }) => {
     { name: "Dashboard", label: "Inicio", icon: "home" },
     { name: "CatalogoMaterias", label: "Catálogo de Materias", icon: "book" },
     { name: "MateriasInscritas", label: "Materias Inscritas", icon: "book" },
-    { name: "MateriasAprobadas", label: "Materias Aprobadas", icon: "book" },
+    { name: "MateriasAprobadas", label: "Historial Académico", icon: "book" },
   ];
 
   const handleNavigate = (screenName) => {

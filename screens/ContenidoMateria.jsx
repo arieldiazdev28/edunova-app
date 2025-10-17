@@ -118,6 +118,19 @@ const ContenidoMateria = ({ route, navigation, setCurrentScreen }) => {
             contentContainerStyle={styles.listContainer}
             scrollEnabled={true}
           />
+          <TouchableOpacity
+            style={styles.examenButton}
+            onPress={() =>
+              navigation.navigate("ExamenFinal", {
+                materiaId: materiaId,
+                materiaTitulo: materiaTitulo,
+              })
+            }
+          >
+            <Text style={styles.examenButtonText}>
+              📝 Realizar Examen Final
+            </Text>
+          </TouchableOpacity>
           <Footer />
         </>
       )}
@@ -238,6 +251,18 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "MontserratRegular",
   },
+  examenButton: {
+    backgroundColor: COLORS.vibrantViolet,
+    paddingVertical: 10,
+    borderRadius: 10,
+    alignItems: "center",
+    margin: 20,
+  },
+  examenButtonText: {
+    color: COLORS.white,
+    fontFamily: "MontserratBold",
+    fontSize: 18,
+  }
 });
 
 export default ContenidoMateria;

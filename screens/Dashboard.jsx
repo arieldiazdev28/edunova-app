@@ -25,11 +25,15 @@ const Dashboard = ({ navigation, openDrawer, setCurrentScreen, route }) => {
   const { user } = useAuth();
   const [materias, setMaterias] = useState([]);
   const [materiasInscritas, setMateriasInscritas] = useState([]);
+  const [materiasAprobadas, setMateriasAprobadas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   // Función auxiliar para manejar errores
-  const manejarError = (error, mensaje = "Error al conectar con el servidor") => {
+  const manejarError = (
+    error,
+    mensaje = "Error al conectar con el servidor"
+  ) => {
     const errorMessage = error?.message || mensaje;
     console.error(errorMessage);
     setError(errorMessage);
@@ -74,6 +78,28 @@ const Dashboard = ({ navigation, openDrawer, setCurrentScreen, route }) => {
     }
   };
 
+  // Obtener materias aprobadas por el usuario
+  const obtenerMateriasAprobadas = async () => {
+    if (!user?.uid) {
+      console.warn("Usuario no disponible para consultar esta información");
+      return [];
+    }
+
+    try {
+      console.log("Obteniendo materias aprobadas...");
+      const { materias } = await api.get(`/mis_materias_aprobadas/${user.uid}`);
+
+      console.log(`Materias aprobadas: ${materias.length}`);
+      setMateriasAprobadas(materias || []);
+      return materias;
+    } catch (error) {
+      if (error.response?.status != 404) {
+        manejarError(error, "Error al obtener las materias");
+      }
+      return [];
+    }
+  };
+
   // Cargar datos al montar el componente
   useEffect(() => {
     const cargarDatos = async () => {
@@ -82,7 +108,11 @@ const Dashboard = ({ navigation, openDrawer, setCurrentScreen, route }) => {
 
       try {
         // Ejecutar ambas peticiones en paralelo
-        await Promise.all([obtenerMaterias(), obtenerMateriasInscritas()]);
+        await Promise.all([
+          obtenerMaterias(),
+          obtenerMateriasInscritas(),
+          obtenerMateriasAprobadas(),
+        ]);
       } catch (error) {
         console.error("Error general al cargar datos:", error);
       } finally {
@@ -109,6 +139,7 @@ const Dashboard = ({ navigation, openDrawer, setCurrentScreen, route }) => {
             await Promise.all([
               obtenerMaterias(),
               obtenerMateriasInscritas(),
+              obtenerMateriasAprobadas(),
             ]);
 
             // Limpiar el parámetro después de usarlo
@@ -200,13 +231,23 @@ const Dashboard = ({ navigation, openDrawer, setCurrentScreen, route }) => {
             )}
 
             {/* Sección Nuestras Materias */}
-            <View>
-              <Subtitle
-                text={"Mis materias aprobadas"}
-                subtitleColor={COLORS.warningOrange}
-              />
-              <Carousel items={materias} keyField="idMateria" />
-            </View>
+            {materiasAprobadas.length > 0 && (
+              <View>
+                <Subtitle
+                  text={"Mis materias aprobadas"}
+                  subtitleColor={COLORS.warningOrange}
+                />
+                <Carousel
+                  items={materiasAprobadas}
+                  keyField="idMateria"
+                  onPressItem={(item) => {
+                    navigation.navigate("MostrarInfoMateriaAprobada", {
+                      materia: item
+                    });
+                  }}
+                />
+              </View>
+            )}
           </View>
         )}
         <Footer />

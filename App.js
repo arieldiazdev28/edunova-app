@@ -26,7 +26,9 @@ import MateriasAprobadas from "./screens/MateriasAprobadas";
 import CompletePerfil from "./screens/CompletePerfil";
 import CustomDrawer from "./components/CustomDrawer";
 import MostrarInfoMateria from "./screens/MostrarInfoMateria";
+import MostrarInfoMateriaAprobada from "./screens/MostrarInfoMateriaAprobada";
 import ContenidoMateria from "./screens/ContenidoMateria";
+import ExamenFinal from "./screens/ExamenFinal";
 import Logo from "./components/Logo";
 import { COLORS } from "./styles";
 import DetalleClase from "./screens/DetalleClase";
@@ -131,6 +133,16 @@ function InsideLayout() {
           )}
         </InsideStack.Screen>
         <InsideStack.Screen
+          name="MostrarInfoMateriaAprobada"
+          options={{ headerShown: false }}>
+          {(props) => (
+            <MostrarInfoMateriaAprobada
+              {...props}
+              openDrawer={() => setDrawerVisible(true)}
+            />
+          )}
+        </InsideStack.Screen>
+        <InsideStack.Screen
           name="ContenidoMateria"
           component={ContenidoMateria}
           options={{ headerShown: false }}
@@ -139,8 +151,12 @@ function InsideLayout() {
           name="DetalleClase"
           component={DetalleClase}
           options={{ headerShown: false }}
+        />  
+        <InsideStack.Screen
+          name="ExamenFinal"
+          component={ExamenFinal}
+          options={{ headerShown: false }}
         />
-
       </InsideStack.Navigator>
 
       <CustomDrawer
