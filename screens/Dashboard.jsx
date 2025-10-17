@@ -96,7 +96,7 @@ const Dashboard = ({ navigation, openDrawer, setCurrentScreen, route }) => {
     setCurrentScreen?.("Dashboard");
   }, [user?.uid, setCurrentScreen]);
 
-  // Usar useFocusEffect para recargar datos cuando vuelves a la pantalla
+  // Usar useFocusEffect para recargar datos cuando vuelve a la pantalla
   useFocusEffect(
     useCallback(() => {
       // Si viene del componente MostrarInfoMateria con materiasActualizadas
