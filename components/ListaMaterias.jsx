@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, ActivityIndicator, Text, StyleSheet, FlatList } from "react-native";
 import api from "../api.js";
 import CardMateria from "./CardMateria.jsx";
+import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../styles.js";
 
 const LOCAL_DESCRIPTIONS = [
@@ -105,6 +106,17 @@ const ListaMaterias = ({ onPressButton, searchQuery = "" }) => {
     );
   }
 
+  // Si no hay resultados después de aplicar el filtro, mostrar mensaje
+  if (!loading && !error && Array.isArray(filtro) && filtro.length === 0) {
+    return (
+      <View style={styles.center}>
+        <Ionicons name={"alert-circle-outline"} size={48} color={COLORS.black} />
+        <Text style={styles.noResults}>No se han encontrado resultados</Text>
+        <Text style={styles.noResultsSubtitle}>NOTA: verifica si el nombre de la materia está escrito correctamente.</Text>
+      </View>
+    );
+  }
+
   return (
     <FlatList
       data={filtro}
@@ -133,6 +145,18 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontFamily: "NunitoRegular"
   },
+  noResults: {
+    color: COLORS.black,
+    fontFamily: "NunitoRegular",
+    fontSize: 20,
+    textAlign: "center",
+    fontWeight: "700",
+    paddingHorizontal: 20
+  },
+  noResultsSubtitle: {
+    textAlign: "center",
+    padding: 20
+  }
 });
 
 export default ListaMaterias;

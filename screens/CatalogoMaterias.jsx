@@ -32,7 +32,7 @@ const CatalogoMaterias = ({ openDrawer, navigation }) => {
         </View>
         <Text style={styles.subjectListTitle}>Materias disponibles</Text>
 
-        {/* Componente de lista de materias */}
+        {/* Componente de lista de materias */}   
         <View style={styles.containerList}>
           <ListaMaterias
             searchQuery={debouncedSearch}

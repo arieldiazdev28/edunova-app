@@ -2,10 +2,17 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { COLORS } from "../styles.js";
 import { Ionicons } from "@expo/vector-icons";
 
-const CardMateriaInscrita = ({ cardColor = COLORS.primaryBlue, buttonColor = COLORS.primaryBlue, onPress }) => {
+const CardMateriaInscrita = ({
+    title = "Nombre de la materia",
+    cardColor = COLORS.primaryBlue,
+    buttonColor = COLORS.primaryBlue,
+    onPress,
+}) => {
     return (
         <View style={[styles.cardMateriaInscrita, { backgroundColor: cardColor }]}>
-            <Text style={styles.cardTitle}>Nombre de la materia</Text>
+            <Text style={styles.cardTitle} numberOfLines={2}>
+                {title}
+            </Text>
             <TouchableOpacity
                 style={[styles.buttonLearn, { backgroundColor: buttonColor }]}
                 onPress={onPress}
@@ -16,7 +23,7 @@ const CardMateriaInscrita = ({ cardColor = COLORS.primaryBlue, buttonColor = COL
             </TouchableOpacity>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     cardMateriaInscrita: {
