@@ -117,9 +117,15 @@ function InsideLayout() {
 
         <InsideStack.Screen
           name="MateriasInscritas"
-          component={MateriasInscritas}
-          options={{ headerShown: true }}
-        />
+          options={{ headerShown: false }}>
+          {(props) => (
+            <MateriasInscritas
+              {...props}
+              openDrawer={() => setDrawerVisible(true)}
+            />
+          )}
+        </InsideStack.Screen>
+
         <InsideStack.Screen
           name="MostrarInfoMateria"
           options={{ headerShown: false }}>
