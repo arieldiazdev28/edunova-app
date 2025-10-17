@@ -79,7 +79,6 @@ const MostrarInfoMateria = ({ navigation, route, openDrawer }) => {
 			return;
 		}
 
-		// Evitar reintentos si ya está inscrito según el estado local
 		if (usuarioInscrito) {
 			Alert.alert("Información", "Ya estás inscrito en esta materia.");
 			return;
@@ -211,17 +210,6 @@ const MostrarInfoMateria = ({ navigation, route, openDrawer }) => {
 		</SafeAreaView>
 	);
 
-
-	{/* <TouchableOpacity>
-          {inscribir ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.enrollText}>
-              {usuarioInscrito ? "Aprender" : "Inscribirme"}
-            </Text>
-          )}
-        </TouchableOpacity>
-         */}
 };
 
 export default MostrarInfoMateria;
