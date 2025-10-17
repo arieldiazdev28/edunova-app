@@ -26,8 +26,10 @@ import MateriasAprobadas from "./screens/MateriasAprobadas";
 import CompletePerfil from "./screens/CompletePerfil";
 import CustomDrawer from "./components/CustomDrawer";
 import MostrarInfoMateria from "./screens/MostrarInfoMateria";
+import ContenidoMateria from "./screens/ContenidoMateria";
 import Logo from "./components/Logo";
 import { COLORS } from "./styles";
+import DetalleClase from "./screens/DetalleClase";
 
 const AppStack = createNativeStackNavigator();
 const InsideStack = createNativeStackNavigator();
@@ -122,6 +124,17 @@ function InsideLayout() {
             />
           )}
         </InsideStack.Screen>
+        <InsideStack.Screen
+          name="ContenidoMateria"
+          component={ContenidoMateria}
+          options={{ headerShown: false }}
+        />
+        <InsideStack.Screen
+          name="DetalleClase"
+          component={DetalleClase}
+          options={{ headerShown: false }}
+        />
+
       </InsideStack.Navigator>
 
       <CustomDrawer
