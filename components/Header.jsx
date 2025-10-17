@@ -27,7 +27,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingTop: 40,
-    paddingHorizontal: 15,
+    paddingBottom: 20,
+    paddingHorizontal: 15
   },
   menuButton: {
     padding: 6,

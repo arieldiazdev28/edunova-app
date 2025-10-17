@@ -7,7 +7,6 @@ import {
   ActivityIndicator,
   Alert,
   TouchableOpacity,
-  SafeAreaView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../styles.js";
@@ -148,7 +147,6 @@ const DetalleClase = ({ route, navigation }) => {
               </View>
             )}
         </View>
-
         <Footer />
       </ScrollView>
     </SafeAreaView>

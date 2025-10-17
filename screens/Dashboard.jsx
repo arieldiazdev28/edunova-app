@@ -1,7 +1,6 @@
 
 import { useEffect, useState, useCallback } from "react";
 import {
-  SafeAreaView,
   ScrollView,
   View,
   Alert,
@@ -15,6 +14,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useAuth } from "../context/AuthContext";
 import api from "../api.js";
 import { COLORS } from "../styles.js";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import Subtitle from "../components/Subtitle.jsx";
 import Carousel from "../components/Carousel.jsx";
