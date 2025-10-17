@@ -7,13 +7,13 @@ import {
   ActivityIndicator,
   Alert,
   TouchableOpacity,
-  SafeAreaView,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
 import { COLORS } from "../styles.js";
 import api from "../api.js";
-import Header from "../components/Header.jsx";
+/* import Header from "../components/Header.jsx"; */
 import Footer from "../components/Footer.jsx";
 
 const ContenidoMateria = ({ route, navigation, setCurrentScreen }) => {

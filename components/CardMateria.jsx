@@ -10,10 +10,7 @@ const CardMateria = ({ subjectTitle, subjectImage, subjectDescription, onPressBu
         <Text style={styles.subjectDescription}>{subjectDescription}</Text>
         <View style={styles.subjectCardFooter}>
           <TouchableOpacity style={styles.buttonSeeMore} onPress={onPressButton}>
-            <Text style={{ fontWeight: "500" }}>Ver más</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonSignUp}>
-            <Text style={{ fontWeight: "500" }}>Inscribirse</Text>
+            <Text style={{ fontWeight: "500", textAlign: "center" }}>Ver más</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -55,20 +52,14 @@ const styles = StyleSheet.create({
   },
   subjectCardFooter: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
     marginRight: 20,
     marginVertical: 15,
   },
   buttonSeeMore: {
+    width: "100%",
     backgroundColor: "#6ccf82ff",
-    fontSize: 18,
-    padding: 10,
-    borderRadius: 8,
-    textAlign: "center",
-  },
-  buttonSignUp: {
-    backgroundColor: "#56b3dfff",
     fontSize: 18,
     padding: 10,
     borderRadius: 8,
